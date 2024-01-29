@@ -2,14 +2,14 @@ import React from "react";
 import styles from '../../styles/Header.module.css'
 import { Link } from "react-router-dom";
 import Logo from "../../images/logo.svg"
-import avatar from "../../images/avatar.jpg"
+import AVATAR from "../../images/avatar.jpg";
 import { ROUTES } from "../../utils/routes";
 
 const Header = () => {
     return (
         <div className={styles.header}>
             <div className={styles.logo}>
-                <Link to={"ROUTES.HOME"}>
+                <Link to={ROUTES.HOME}>
                     <img src={Logo} alt="Stuff" />
                 </Link>
             </div>
@@ -17,7 +17,7 @@ const Header = () => {
                 <div className={styles.user}>
                     <div
                         className={styles.avarar}
-                        style={{ backgroundImage: `url(${avatar})` }}
+                        style={{ backgroundImage: `url(${AVATAR})` }}
                     />
                     <div className={styles.username}>Guest</div>
                 </div>
