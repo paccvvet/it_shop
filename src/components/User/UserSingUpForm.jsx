@@ -4,7 +4,7 @@ import styles from "../../styles/User.module.css"
 import { useDispatch } from 'react-redux'
 import { createUser } from '../../features/user/userSlice'
 
-const UserSingUpForm = ({closeForm}) => {
+const UserSingUpForm = ({toggleCurrentFormType, closeForm}) => {
   const [values, setValues] = useState({
     name: "",
     email: "",
@@ -72,7 +72,7 @@ const UserSingUpForm = ({closeForm}) => {
             placeholder='Your avatar'
             required />
         </div>
-        <div className={styles.link}>
+        <div className={styles.link} onClick={() => toggleCurrentFormType("login")} >
           I already have a account
         </div>
         <button className={styles.submit} type='submit'>

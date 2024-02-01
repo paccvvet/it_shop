@@ -5,7 +5,7 @@ import { BASE_URL } from "../../utils/costants";
 
 export const createUser = createAsyncThunk('users/createUser', async (payload, thunkAPI) => {
     try {
-        const res = await axios.post(`${BASE_URL}/users`, payload );
+        const res = await axios.post(`${BASE_URL}/users`, payload);
         return res.data;
     } catch (err) {
         console.log(err);
@@ -16,10 +16,10 @@ export const createUser = createAsyncThunk('users/createUser', async (payload, t
 
 export const loginUser = createAsyncThunk('users/loginUser', async (payload, thunkAPI) => {
     try {
-        const res = await axios.post(`${BASE_URL}/auth/login`, payload );
+        const res = await axios.post(`${BASE_URL}/auth/login`, payload);
         const login = await axios(`${BASE_URL}/auth/profile`, {
-            headers:{
-                "Authorization": `Bearer ${res.access_token}`
+            headers: {
+                "Authorization": `Bearer ${res.data.access_token}`,
             }
         });
         return login.data;
@@ -29,9 +29,20 @@ export const loginUser = createAsyncThunk('users/loginUser', async (payload, thu
     }
 }
 );
+export const updateUser = createAsyncThunk('users/updateUser', async (payload, thunkAPI) => {
+    try {
+        const res = await axios.put(`${BASE_URL}/users/${payload.id}`, payload);
+        return res.data;
+    } catch (err) {
+        console.log(err);
+        return thunkAPI.rejectWithValue(err)
+    }
+}
+);
 
 const addCurrentUser = (state, { payload }) => {
-    state.currentUser = payload};
+    state.currentUser = payload
+};
 
 
 const userSlice = createSlice({
@@ -40,7 +51,7 @@ const userSlice = createSlice({
         currentUser: null,
         cart: [],
         isLoading: false,
-        formType:"signup", 
+        formType: "signup",
         showForm: false,
     },
     reducers: {
@@ -51,28 +62,31 @@ const userSlice = createSlice({
                 newCart = newCart.map((item) => {
                     return item.id === payload.id ? { ...item, quantity: payload.quantity || item.quantity + 1 } : item;
                 })
-            } else newCart.push({...payload, quantity: 1})
+            } else newCart.push({ ...payload, quantity: 1 })
 
             state.cart = newCart;
         },
-        toggleForm: (state, {payload}) =>{
+        removeItemFromCart: (state, { payload }) => {
+            state.cart = state.cart.filter(({ id }) => id !== payload);
+        },
+        toggleForm: (state, { payload }) => {
             state.showForm = payload;
-        }
+        },
+        toggleFormType: (state, { payload }) => {
+            state.formType = payload;
+        },
+
     },
 
     extraReducers: (builder) => {
-        // builder.addCase(createUser.pending, (state) => {
-        //     state.isLoading = true;
-        // });
         builder.addCase(createUser.fulfilled, addCurrentUser);
         builder.addCase(loginUser.fulfilled, addCurrentUser);
-        // builder.addCase(createUser.rejected, (state) => {
-        //     state.isLoading = false;
-        // });
+        builder.addCase(updateUser.fulfilled, addCurrentUser);
+
     },
 });
 
-export const {addItemToCart, toggleForm} = userSlice.actions;
+export const { addItemToCart, toggleForm, toggleFormType, removeItemFromCart } = userSlice.actions;
 
 export default userSlice.reducer;
 

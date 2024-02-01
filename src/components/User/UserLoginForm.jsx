@@ -4,7 +4,7 @@ import styles from "../../styles/User.module.css"
 import { useDispatch } from 'react-redux'
 import { loginUser } from '../../features/user/userSlice'
 
-const UserLoginForm = ({ closeForm }) => {
+const UserLoginForm = ({ closeForm, toggleCurrentFormType }) => {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -13,7 +13,7 @@ const UserLoginForm = ({ closeForm }) => {
     setValues({ ...values, [name]: value });
   }
   const dispatch = useDispatch();
-  debugger
+ 
   const handleSubmit = (e) => {
     e.preventDefault();
     const isNotEmpty = Object.values(values).every((val) => val);
@@ -31,7 +31,7 @@ const UserLoginForm = ({ closeForm }) => {
         </svg>
       </div>
       <div className={styles.title}>
-        Sing Up
+        Login
       </div>
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.group}>
@@ -52,7 +52,7 @@ const UserLoginForm = ({ closeForm }) => {
             placeholder='Your password'
             required />
         </div>
-        <div className={styles.link}>
+        <div className={styles.link} onClick={() => toggleCurrentFormType("singup")}>
           Create an account
         </div>
         <button className={styles.submit} type='submit'>
